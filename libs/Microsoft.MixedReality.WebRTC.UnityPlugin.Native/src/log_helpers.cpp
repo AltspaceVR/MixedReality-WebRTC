@@ -29,8 +29,7 @@ void UnityLogger::LogWarning(const char* str) {
 }
 
 bool UnityLogger::LoggersSet() {
-  // Test one because they all get set together
-  return LogDebugFunc != nullptr;
+  return LogDebugFunc != nullptr && LogWarningFunc != nullptr && LogErrorFunc != nullptr;
 }
 
 void UnityLogger::SetLoggingFunctions(LogFunction logDebug,

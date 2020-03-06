@@ -306,7 +306,7 @@ MonoBehaviour:
       m_Calls: []
   PeerConnection: {fileID: 1932579002}
   TrackName: 
-  AutoAddTrackOnStart: 1
+  AutoAddTrackOnStart: 0
   SourceCamera: {fileID: 1221709219}
   CameraEvent: 20
 --- !u!4 &799132312
@@ -776,6 +776,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8734329137356271696, guid: 94759df28537c86408a84858950de05a,
+        type: 3}
+      propertyPath: LocalPeerId
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8734329137356271696, guid: 94759df28537c86408a84858950de05a,
+        type: 3}
+      propertyPath: RemotePeerId
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8734329137356271696, guid: 94759df28537c86408a84858950de05a,
+        type: 3}
+      propertyPath: HttpServerAddress
+      value: http://39daa648.ngrok.io
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 94759df28537c86408a84858950de05a, type: 3}

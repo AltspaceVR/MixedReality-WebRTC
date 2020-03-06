@@ -10,6 +10,7 @@
 #include "render_api.h"
 
 using mrsI420AVideoFrame = Microsoft::MixedReality::WebRTC::I420AVideoFrame;
+using mrsArgb32VideoFrame = Microsoft::MixedReality::WebRTC::Argb32VideoFrame;
 
 struct I420VideoFrame {
   int width{0};
@@ -38,6 +39,10 @@ struct I420VideoFrame {
   }
 };
 
+struct ArgbVideoFrame {
+    // TODO
+};
+
 class NativeRenderer {
  public:
   static void Create(PeerConnectionHandle peerHandle);
@@ -49,6 +54,10 @@ class NativeRenderer {
 
   PeerConnectionHandle Handle() const { return m_handle; }
 
+  void EnableLocalVideo(VideoKind format,
+                        TextureDesc textureDescs[],
+                        int textureDescCount);
+  void DisableLocalVideo();
   void EnableRemoteVideo(VideoKind format,
                          TextureDesc textureDescs[],
                          int textureDescCount);
@@ -76,10 +85,14 @@ class NativeRenderer {
   VideoKind m_remoteVideoFormat{VideoKind::kNone};
   VideoKind m_localVideoFormat{VideoKind::kNone};
   std::shared_ptr<I420VideoFrame> m_nextI420RemoteVideoFrame;
+  std::shared_ptr<ArgbVideoFrame> m_nextArgbRemoteVideoFrame;
 
   void Shutdown();
 
   static void MRS_CALL
   I420ARemoteVideoFrameCallback(void* user_data,
                                 const mrsI420AVideoFrame& frame);
+  static void MRS_CALL
+  ArgbRemotevideoFrameCallback(void* user_data,
+                               const mrsArgb32VideoFrame& frame);
 };

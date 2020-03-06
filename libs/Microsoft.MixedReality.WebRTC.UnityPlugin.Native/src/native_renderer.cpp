@@ -5,24 +5,13 @@
 
 #include "../include/api.h"
 #include "handle_pool.h"
+#include "include/interop_api.h"
 #include "log_helpers.h"
 #include "native_renderer.h"
 
 #include <set>
 
-/// Callback fired when a local or remote (depending on use) video frame is
-/// available to be consumed by the caller, usually for display.
-/// The video frame is encoded in I420 triplanar format (NV12).
-using PeerConnectionI420AVideoFrameCallback =
-    void(MRS_CALL*)(void* user_data, const mrsI420AVideoFrame& frame);
-
-extern "C" MRS_API void MRS_CALL
-mrsPeerConnectionRegisterI420ARemoteVideoFrameCallback(
-    PeerConnectionHandle peerHandle,
-    PeerConnectionI420AVideoFrameCallback callback,
-    void* user_data) noexcept;
-
-#pragma warning(disable : 4302 4311 4312)
+//#pragma warning(disable : 4302 4311 4312)
 
 // Mutex locking hierarchy. You may nest locks in this order only. Never go the
 // other way. You don't necessarily have to  have a higher-order guard in place
@@ -36,6 +25,7 @@ static std::mutex g_lock;
 static std::shared_ptr<RenderApi> g_renderApi;
 static std::set<PeerConnectionHandle> g_videoUpdateQueue;
 static std::vector<std::shared_ptr<I420VideoFrame>> g_freeI420VideoFrames;
+static std::vector<std::shared_ptr<ArgbVideoFrame>> g_freeArgbVideoFrames;
 std::map<PeerConnectionHandle, std::shared_ptr<NativeRenderer>>
     NativeRenderer::g_renderers;
 
@@ -64,8 +54,7 @@ void NativeRenderer::Create(PeerConnectionHandle peerHandle) {
     if (existing) {
       NativeRenderer::DestroyUnsafe(peerHandle);
     }
-    g_renderers.emplace(peerHandle, std::make_shared<NativeRenderer>(
-                                        new NativeRenderer(peerHandle)));
+    g_renderers.emplace(peerHandle, std::make_shared<NativeRenderer>(peerHandle));
   }
 }
 
@@ -113,7 +102,9 @@ std::vector<std::shared_ptr<NativeRenderer>> NativeRenderer::MultiGetUnsafe(
 }
 
 NativeRenderer::NativeRenderer(PeerConnectionHandle peerHandle)
-    : m_handle(peerHandle) {}
+    : m_handle(peerHandle) {
+  Log_Debug("NativeRenderer::NativeRenderer");
+}
 
 NativeRenderer::~NativeRenderer() {
   Log_Debug("NativeRenderer::~NativeRenderer");
@@ -124,11 +115,25 @@ void NativeRenderer::Shutdown() {
   DisableRemoteVideo();
 }
 
+void NativeRenderer::EnableLocalVideo(VideoKind format,
+                                      TextureDesc textureDescs[],
+                                      int textureDescCount) {
+  Log_Debug("NativeRenderer::EnableLocalVideo");
+  UNREFERENCED_PARAMETER(format);
+  UNREFERENCED_PARAMETER(textureDescs);
+  UNREFERENCED_PARAMETER(textureDescCount);
+  // TODO
+}
+
+void NativeRenderer::DisableLocalVideo() {
+  Log_Debug("NativeRenderer::DisableLocalVideo");
+  // TODO
+}
+
 void NativeRenderer::EnableRemoteVideo(VideoKind format,
                                        TextureDesc textureDescs[],
                                        int textureDescCount) {
-  Log_Debug("NativeRenderer::EnableRemoteVideo: %p, %p, %p",
-            textureDescs[0].texture, textureDescs[1].texture, textureDescs[2].texture);
+  Log_Debug("NativeRenderer::EnableRemoteVideo");
   {
     // Instance lock
     std::lock_guard guard(m_lock);
@@ -171,14 +176,21 @@ void NativeRenderer::I420ARemoteVideoFrameCallback(
     void* user_data,
     const mrsI420AVideoFrame& frame) {
   if (auto renderer = NativeRenderer::Get(user_data)) {
-    // RESEARCH: Do we need to keep a frame queue or is it fine
-    // to just render the most recent frame?
+    // RESEARCH: Do we need to keep a frame queue or is it fine to just render the most
+    // recent frame?
 
-    // Copy the video frame.
+    // The performance trade-off being made here is to lock g_lock two times, preferring
+    // to copy the frame buffer outside any lock. Alternatively, the copy operation
+    // could be done inside g_lock scope. This would result in a single g_lock, but the
+    // lock would be held for a longer period of time every video frame, for every video
+    // stream. RESEARCH: Which is better?
+
+    // Acquire a video frame buffer from the free list.
     {
       // Global lock
       std::lock_guard guard(g_lock);
       if (renderer->m_nextI420RemoteVideoFrame == nullptr) {
+        // TODO: Encapsulate this logic.
         if (g_freeI420VideoFrames.size()) {
           renderer->m_nextI420RemoteVideoFrame = g_freeI420VideoFrames.back();
           g_freeI420VideoFrames.pop_back();
@@ -187,8 +199,16 @@ void NativeRenderer::I420ARemoteVideoFrameCallback(
               std::make_shared<I420VideoFrame>();
         }
       }
-      renderer->m_nextI420RemoteVideoFrame->CopyFrame(frame);
-      // Register for the next video update.
+    }
+
+    // Copy the incoming video frame to the buffer.
+    renderer->m_nextI420RemoteVideoFrame->CopyFrame(frame);
+
+    // Queue the renderer for the next video update.
+    {
+      // Global lock
+      std::lock_guard guard(g_lock);
+      // Register this renderer for the next video update.
       g_videoUpdateQueue.emplace(renderer->m_handle);
     }
   }
@@ -204,8 +224,9 @@ void MRS_CALL NativeRenderer::DoVideoUpdate() {
   {
     // Global lock
     std::lock_guard guard(g_lock);
-    // Gather the native renderers of the queued peer handles.
+    // Gather queued native renderers.
     renderers = NativeRenderer::MultiGetUnsafe(g_videoUpdateQueue);
+    // Clear the queue.
     g_videoUpdateQueue.clear();
   }
 
@@ -215,22 +236,22 @@ void MRS_CALL NativeRenderer::DoVideoUpdate() {
 
     std::vector<TextureDesc> textures;
     std::shared_ptr<I420VideoFrame> remoteI420Frame;
+    std::shared_ptr<ArgbVideoFrame> remoteArgbFrame;
     {
       // Instance lock
       std::lock_guard guard(renderer->m_lock);
       // Copy the remote textures and current video frame.
       textures = renderer->m_remoteTextures;
       remoteI420Frame = renderer->m_nextI420RemoteVideoFrame;
+      remoteArgbFrame = renderer->m_nextArgbRemoteVideoFrame;
       renderer->m_nextI420RemoteVideoFrame = nullptr;
+      renderer->m_nextArgbRemoteVideoFrame = nullptr;
     }
 
-    if (textures.size() < 3)
-      continue;
-
-    if (!remoteI420Frame)
-      continue;
-
-    {
+    if (remoteI420Frame) {
+      // Render the frame to the textures.
+      if (textures.size() < 3)
+        continue;
       int index = 0;
       for (const TextureDesc& textureDesc : textures) {
 #if 1
@@ -258,13 +279,24 @@ void MRS_CALL NativeRenderer::DoVideoUpdate() {
 #endif
         ++index;
       }
+
+      // Recycle the frame
+      {
+        // Global lock
+        std::lock_guard guard(g_lock);
+        g_freeI420VideoFrames.push_back(remoteI420Frame);
+      }
     }
 
-    // Recycle the frame
-    {
-      // Instance lock
-      std::lock_guard guard(g_lock);
-      g_freeI420VideoFrames.push_back(remoteI420Frame);
+    if (remoteArgbFrame) {
+      // TODO
+
+      // Recycle the frame
+      {
+        // Global lock
+        std::lock_guard guard(g_lock);
+        g_freeArgbVideoFrames.push_back(remoteArgbFrame);
+      }
     }
   }
 }

@@ -35,6 +35,13 @@ extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API UnityPluginUnload() {
   s_Graphics->UnregisterDeviceEventCallback(OnGraphicsDeviceEvent);
 }
 
+void MRS_CALL
+mrsNativeRenderer_SetLoggingFunctions(LogFunction logDebugFunc,
+                                      LogFunction logErrorFunc,
+                                      LogFunction logWarningFunc) {
+  UnityLogger::SetLoggingFunctions(logDebugFunc, logErrorFunc, logWarningFunc);
+}
+
 //
 // NativeRenderer API
 //
@@ -42,21 +49,41 @@ extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API UnityPluginUnload() {
 using namespace Microsoft::MixedReality::WebRTC;
 
 mrsResult MRS_CALL
-mrsNativeRendererCreate(PeerConnectionHandle peerHandle) noexcept {
+mrsNativeRenderer_Create(PeerConnectionHandle peerHandle) noexcept {
   NativeRenderer::Create(peerHandle);
   return Result::kSuccess;
 }
+
 mrsResult MRS_CALL
-mrsNativeRendererDestroy(PeerConnectionHandle peerHandle) noexcept {
+mrsNativeRenderer_Destroy(PeerConnectionHandle peerHandle) noexcept {
   NativeRenderer::Destroy(peerHandle);
   return Result::kSuccess;
 }
 
 mrsResult MRS_CALL
-mrsNativeRendererEnableRemoteVideo(PeerConnectionHandle peerHandle,
+mrsNativeRenderer_EnableLocalVideo(PeerConnectionHandle peerHandle,
                                    VideoKind format,
                                    TextureDesc textures[],
                                    int textureCount) noexcept {
+  if (auto renderer = NativeRenderer::Get(peerHandle)) {
+    renderer->EnableLocalVideo(format, textures, textureCount);
+  }
+  return Result::kSuccess;
+}
+
+mrsResult MRS_CALL
+mrsNativeRenderer_DisableLocalVideo(PeerConnectionHandle peerHandle) noexcept {
+  if (auto renderer = NativeRenderer::Get(peerHandle)) {
+    renderer->DisableLocalVideo();
+  }
+  return Result::kSuccess;
+}
+
+mrsResult MRS_CALL
+mrsNativeRenderer_EnableRemoteVideo(PeerConnectionHandle peerHandle,
+                                    VideoKind format,
+                                    TextureDesc textures[],
+                                    int textureCount) noexcept {
   if (auto renderer = NativeRenderer::Get(peerHandle)) {
     renderer->EnableRemoteVideo(format, textures, textureCount);
   }
@@ -64,19 +91,13 @@ mrsNativeRendererEnableRemoteVideo(PeerConnectionHandle peerHandle,
 }
 
 mrsResult MRS_CALL
-mrsNativeRendererDisableRemoteVideo(PeerConnectionHandle peerHandle) noexcept {
+mrsNativeRenderer_DisableRemoteVideo(PeerConnectionHandle peerHandle) noexcept {
   if (auto renderer = NativeRenderer::Get(peerHandle)) {
     renderer->DisableRemoteVideo();
   }
   return Result::kSuccess;
 }
 
-VideoRenderMethod MRS_CALL mrsNativeRendererGetVideoUpdateMethod() noexcept {
+VideoRenderMethod MRS_CALL mrsNativeRenderer_GetVideoUpdateMethod() noexcept {
   return NativeRenderer::DoVideoUpdate;
-}
-
-void MRS_CALL mrsSetLoggingFunctions(LogFunction logDebugFunc,
-                                     LogFunction logErrorFunc,
-                                     LogFunction logWarningFunc) {
-  UnityLogger::SetLoggingFunctions(logDebugFunc, logErrorFunc, logWarningFunc);
 }

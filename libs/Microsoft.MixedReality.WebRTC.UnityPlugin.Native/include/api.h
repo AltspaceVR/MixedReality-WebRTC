@@ -35,26 +35,37 @@ typedef void(MRS_CALL* VideoRenderMethod)();
 
 /// Create a native renderer and return a handle to it.
 MRS_API mrsResult MRS_CALL
-mrsNativeRendererCreate(PeerConnectionHandle peerHandle) noexcept;
+mrsNativeRenderer_Create(PeerConnectionHandle peerHandle) noexcept;
 
 /// Destroy a native renderer.
 MRS_API mrsResult MRS_CALL
-mrsNativeRendererDestroy(PeerConnectionHandle peerHandle) noexcept;
+mrsNativeRenderer_Destroy(PeerConnectionHandle peerHandle) noexcept;
 
 /// Register textures for remote video and start rendering it.
 MRS_API mrsResult MRS_CALL
-mrsNativeRendererEnableRemoteVideo(PeerConnectionHandle peerHandle,
+mrsNativeRenderer_EnableLocalVideo(PeerConnectionHandle peerHandle,
                                    VideoKind format,
                                    TextureDesc textures[],
                                    int textureCount) noexcept;
 
 /// Clear remote textures and stop rendering remote video.
 MRS_API mrsResult MRS_CALL
-mrsNativeRendererDisableRemoteVideo(PeerConnectionHandle peerHandle) noexcept;
+mrsNativeRenderer_DisableLocalVideo(PeerConnectionHandle peerHandle) noexcept;
+
+/// Register textures for remote video and start rendering it.
+MRS_API mrsResult MRS_CALL
+mrsNativeRenderer_EnableRemoteVideo(PeerConnectionHandle peerHandle,
+                                    VideoKind format,
+                                    TextureDesc textures[],
+                                    int textureCount) noexcept;
+
+/// Clear remote textures and stop rendering remote video.
+MRS_API mrsResult MRS_CALL
+mrsNativeRenderer_DisableRemoteVideo(PeerConnectionHandle peerHandle) noexcept;
 
 /// Returns the rendering method called by Unity.
 MRS_API VideoRenderMethod MRS_CALL
-mrsNativeRendererGetVideoUpdateMethod() noexcept;
+mrsNativeRenderer_GetVideoUpdateMethod() noexcept;
 
 //
 // Utils
@@ -63,7 +74,8 @@ mrsNativeRendererGetVideoUpdateMethod() noexcept;
 typedef void (*LogFunction)(const char*);
 
 /// Pipe log entries to Unity's log.
-MRS_API void MRS_CALL mrsSetLoggingFunctions(LogFunction logDebugFunc,
-                                             LogFunction logErrorFunc,
-                                             LogFunction logWarningFunc);
+MRS_API void MRS_CALL
+mrsNativeRenderer_SetLoggingFunctions(LogFunction logDebugFunc,
+                                      LogFunction logErrorFunc,
+                                      LogFunction logWarningFunc);
 }
