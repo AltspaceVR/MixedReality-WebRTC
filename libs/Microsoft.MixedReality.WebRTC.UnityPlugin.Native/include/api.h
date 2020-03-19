@@ -41,18 +41,7 @@ mrsNativeRenderer_Create(PeerConnectionHandle peerHandle) noexcept;
 MRS_API mrsResult MRS_CALL
 mrsNativeRenderer_Destroy(PeerConnectionHandle peerHandle) noexcept;
 
-/// Register textures for remote video and start rendering it.
-MRS_API mrsResult MRS_CALL
-mrsNativeRenderer_EnableLocalVideo(PeerConnectionHandle peerHandle,
-                                   VideoKind format,
-                                   TextureDesc textures[],
-                                   int textureCount) noexcept;
-
-/// Clear remote textures and stop rendering remote video.
-MRS_API mrsResult MRS_CALL
-mrsNativeRenderer_DisableLocalVideo(PeerConnectionHandle peerHandle) noexcept;
-
-/// Register textures for remote video and start rendering it.
+//// Register textures for remote video and start rendering it.
 MRS_API mrsResult MRS_CALL
 mrsNativeRenderer_EnableRemoteVideo(PeerConnectionHandle peerHandle,
                                     VideoKind format,

@@ -54,10 +54,6 @@ class NativeRenderer {
 
   PeerConnectionHandle Handle() const { return m_handle; }
 
-  void EnableLocalVideo(VideoKind format,
-                        TextureDesc textureDescs[],
-                        int textureDescCount);
-  void DisableLocalVideo();
   void EnableRemoteVideo(VideoKind format,
                          TextureDesc textureDescs[],
                          int textureDescCount);
@@ -81,9 +77,7 @@ class NativeRenderer {
   PeerConnectionHandle m_handle{nullptr};
   std::mutex m_lock;
   std::vector<TextureDesc> m_remoteTextures;
-  std::vector<TextureDesc> m_localTextures;
   VideoKind m_remoteVideoFormat{VideoKind::kNone};
-  VideoKind m_localVideoFormat{VideoKind::kNone};
   std::shared_ptr<I420VideoFrame> m_nextI420RemoteVideoFrame;
   std::shared_ptr<ArgbVideoFrame> m_nextArgbRemoteVideoFrame;
 

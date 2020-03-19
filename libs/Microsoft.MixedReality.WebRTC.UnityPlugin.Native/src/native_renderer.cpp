@@ -54,7 +54,8 @@ void NativeRenderer::Create(PeerConnectionHandle peerHandle) {
     if (existing) {
       NativeRenderer::DestroyUnsafe(peerHandle);
     }
-    g_renderers.emplace(peerHandle, std::make_shared<NativeRenderer>(peerHandle));
+    g_renderers.emplace(peerHandle,
+                        std::make_shared<NativeRenderer>(peerHandle));
   }
 }
 
@@ -104,10 +105,14 @@ std::vector<std::shared_ptr<NativeRenderer>> NativeRenderer::MultiGetUnsafe(
 NativeRenderer::NativeRenderer(PeerConnectionHandle peerHandle)
     : m_handle(peerHandle) {
   Log_Debug("NativeRenderer::NativeRenderer");
+  if (!g_renderApi) {
+    Log_Warning("NativeRenderer: Unity plugin not initialized.");
+  }
 }
 
 NativeRenderer::~NativeRenderer() {
-  Log_Debug("NativeRenderer::~NativeRenderer");
+  /// This is unsafe to log in Unity Editor.
+  // Log_Debug("NativeRenderer::~NativeRenderer");
 }
 
 void NativeRenderer::Shutdown() {
@@ -115,25 +120,13 @@ void NativeRenderer::Shutdown() {
   DisableRemoteVideo();
 }
 
-void NativeRenderer::EnableLocalVideo(VideoKind format,
-                                      TextureDesc textureDescs[],
-                                      int textureDescCount) {
-  Log_Debug("NativeRenderer::EnableLocalVideo");
-  UNREFERENCED_PARAMETER(format);
-  UNREFERENCED_PARAMETER(textureDescs);
-  UNREFERENCED_PARAMETER(textureDescCount);
-  // TODO
-}
-
-void NativeRenderer::DisableLocalVideo() {
-  Log_Debug("NativeRenderer::DisableLocalVideo");
-  // TODO
-}
-
 void NativeRenderer::EnableRemoteVideo(VideoKind format,
                                        TextureDesc textureDescs[],
                                        int textureDescCount) {
   Log_Debug("NativeRenderer::EnableRemoteVideo");
+  if (!g_renderApi) {
+    Log_Warning("NativeRenderer: Unity plugin not initialized.");
+  }
   {
     // Instance lock
     std::lock_guard guard(m_lock);
@@ -176,14 +169,14 @@ void NativeRenderer::I420ARemoteVideoFrameCallback(
     void* user_data,
     const mrsI420AVideoFrame& frame) {
   if (auto renderer = NativeRenderer::Get(user_data)) {
-    // RESEARCH: Do we need to keep a frame queue or is it fine to just render the most
-    // recent frame?
+    // RESEARCH: Do we need to keep a frame queue or is it fine to just render
+    // the most recent frame?
 
-    // The performance trade-off being made here is to lock g_lock two times, preferring
-    // to copy the frame buffer outside any lock. Alternatively, the copy operation
-    // could be done inside g_lock scope. This would result in a single g_lock, but the
-    // lock would be held for a longer period of time every video frame, for every video
-    // stream. RESEARCH: Which is better?
+    // The performance trade-off being made here is to lock g_lock two times,
+    // preferring to copy the frame buffer outside any lock. Alternatively, the
+    // copy operation could be done inside g_lock scope. This would result in a
+    // single g_lock, but the lock would be held for a longer period of time
+    // every video frame, for every video stream. RESEARCH: Which is better?
 
     // Acquire a video frame buffer from the free list.
     {
@@ -230,9 +223,9 @@ void MRS_CALL NativeRenderer::DoVideoUpdate() {
     g_videoUpdateQueue.clear();
   }
 
+  /// RESEARCH: Can all native renderers be handled in a single draw call?
   for (auto renderer : renderers) {
     // TODO: Support ARGB format.
-    // TODO: Support local video.
 
     std::vector<TextureDesc> textures;
     std::shared_ptr<I420VideoFrame> remoteI420Frame;
@@ -252,6 +245,7 @@ void MRS_CALL NativeRenderer::DoVideoUpdate() {
       // Render the frame to the textures.
       if (textures.size() < 3)
         continue;
+
       int index = 0;
       for (const TextureDesc& textureDesc : textures) {
 #if 1

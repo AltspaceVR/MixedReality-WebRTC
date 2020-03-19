@@ -19,8 +19,10 @@ static IUnityGraphics* s_Graphics = nullptr;
 
 extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API
 OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType) {
-  NativeRenderer::OnGraphicsDeviceEvent(eventType, s_Graphics->GetRenderer(),
-                                        s_UnityInterfaces);
+  if (s_Graphics && s_UnityInterfaces) {
+    NativeRenderer::OnGraphicsDeviceEvent(eventType, s_Graphics->GetRenderer(),
+                                          s_UnityInterfaces);
+  }
 }
 
 extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API
@@ -32,7 +34,10 @@ UnityPluginLoad(IUnityInterfaces* unityInterfaces) {
 }
 
 extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API UnityPluginUnload() {
-  s_Graphics->UnregisterDeviceEventCallback(OnGraphicsDeviceEvent);
+  if (s_Graphics) {
+    s_Graphics->UnregisterDeviceEventCallback(OnGraphicsDeviceEvent);
+    s_Graphics = nullptr;
+  }
 }
 
 void MRS_CALL
@@ -57,25 +62,6 @@ mrsNativeRenderer_Create(PeerConnectionHandle peerHandle) noexcept {
 mrsResult MRS_CALL
 mrsNativeRenderer_Destroy(PeerConnectionHandle peerHandle) noexcept {
   NativeRenderer::Destroy(peerHandle);
-  return Result::kSuccess;
-}
-
-mrsResult MRS_CALL
-mrsNativeRenderer_EnableLocalVideo(PeerConnectionHandle peerHandle,
-                                   VideoKind format,
-                                   TextureDesc textures[],
-                                   int textureCount) noexcept {
-  if (auto renderer = NativeRenderer::Get(peerHandle)) {
-    renderer->EnableLocalVideo(format, textures, textureCount);
-  }
-  return Result::kSuccess;
-}
-
-mrsResult MRS_CALL
-mrsNativeRenderer_DisableLocalVideo(PeerConnectionHandle peerHandle) noexcept {
-  if (auto renderer = NativeRenderer::Get(peerHandle)) {
-    renderer->DisableLocalVideo();
-  }
   return Result::kSuccess;
 }
 
