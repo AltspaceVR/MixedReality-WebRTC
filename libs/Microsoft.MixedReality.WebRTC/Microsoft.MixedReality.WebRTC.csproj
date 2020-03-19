@@ -27,6 +27,7 @@
     <Copyright>Copyright (c) Microsoft Corporation</Copyright>
     <PackageTags>webrtc video audio streaming</PackageTags>
     <DocumentationFile>..\..\bin\$(TargetFramework)\$(Configuration)\Microsoft.MixedReality.WebRTC.xml</DocumentationFile>
+    <AssemblyName>Microsoft-MixedReality-WebRTC</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,7 +37,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <NativeUnityPluginSourceFiles Include="$(OutputPath)\Microsoft.MixedReality.WebRTC.dll;$(OutputPath)\Microsoft.MixedReality.WebRTC.pdb" />
+    <NativeUnityPluginSourceFiles Include="$(OutputPath)\$(TargetName).dll;$(OutputPath)\$(TargetName).pdb" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

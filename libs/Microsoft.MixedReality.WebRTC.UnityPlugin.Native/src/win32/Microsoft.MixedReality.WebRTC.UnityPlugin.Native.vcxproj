@@ -101,7 +101,7 @@
   <PropertyGroup>
     <OutDir>..\..\..\..\bin\Win32\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>..\..\..\..\build\Microsoft.MixedReality.WebRTC.UnityPlugin.Native\Win32\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <TargetName>Microsoft.MixedReality.WebRTC.UnityPlugin.Native</TargetName>
+    <TargetName>Microsoft-MixedReality-WebRTC-UnityPlugin-Native</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(PlatformTarget)' == 'x86'">
     <UnityPluginDirectory>$(ProjectDir)..\..\..\Microsoft.MixedReality.WebRTC.Unity\Assets\Plugins\Win32\x86</UnityPluginDirectory>
@@ -110,12 +110,7 @@
     <UnityPluginDirectory>$(ProjectDir)..\..\..\Microsoft.MixedReality.WebRTC.Unity\Assets\Plugins\Win32\x86_64</UnityPluginDirectory>
   </PropertyGroup>
   <ItemGroup>
-    <NativeUnityPluginSourceFiles Include="$(OutDir)\Microsoft.MixedReality.WebRTC.UnityPlugin.Native.dll;$(OutDir)\Microsoft.MixedReality.WebRTC.UnityPlugin.Native.pdb" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Microsoft.MixedReality.WebRTC.Native\src\win32\Microsoft.MixedReality.WebRTC.Native.Win32.vcxproj">
-      <Project>{928899bc-f131-4343-a1ab-72f3a5787e41}</Project>
-    </ProjectReference>
+    <NativeUnityPluginSourceFiles Include="$(OutDir)\$(TargetName).dll;$(OutDir)\$(TargetName).pdb" />
   </ItemGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -190,6 +185,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Microsoft.MixedReality.WebRTC.Native\src\win32\Microsoft.MixedReality.WebRTC.Native.Win32.vcxproj">
+      <Project>{928899bc-f131-4343-a1ab-72f3a5787e41}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

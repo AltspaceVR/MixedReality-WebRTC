@@ -29,11 +29,11 @@
 
   <!-- Deploy native DLL to output folder to run tests -->
   <ItemGroup>
-    <Content Include="..\..\bin\Win32\$(PlatformTarget)\$(Configuration)\Microsoft.MixedReality.WebRTC.Native.dll">
+    <Content Include="..\..\bin\Win32\$(PlatformTarget)\$(Configuration)\Microsoft-MixedReality-WebRTC-Native.dll">
       <Link>Microsoft.MixedReality.WebRTC.Native.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\bin\Win32\$(PlatformTarget)\$(Configuration)\Microsoft.MixedReality.WebRTC.Native.pdb">
+    <Content Include="..\..\bin\Win32\$(PlatformTarget)\$(Configuration)\Microsoft-MixedReality-WebRTC-Native.pdb">
       <Link>Microsoft.MixedReality.WebRTC.Native.pdb</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

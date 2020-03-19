@@ -39,7 +39,7 @@ namespace Microsoft.MixedReality.WebRTC.Interop
 
     public static class Utils
     {
-        internal const string dllPath = "Microsoft.MixedReality.WebRTC.Native";
+        internal const string dllPath = "Microsoft-MixedReality-WebRTC-Native";
 
         // Error codes returned by the interop API -- see mrs_errors.h
         internal const uint MRS_SUCCESS = 0u;
