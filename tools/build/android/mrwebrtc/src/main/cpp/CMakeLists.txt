@@ -28,28 +28,28 @@ set_target_properties(
 #
 
 # Base path to mrwebrtc project.
-set(mr-webrtc-native-dir ../../../../../../../libs/Microsoft.MixedReality.WebRTC.Native)
+set(mrwebrtc-dir ../../../../../../../libs/Microsoft.MixedReality.WebRTC.Native)
 
 # List of source files to compile.
 add_library(
         mrwebrtc
         SHARED
-        ${mr-webrtc-native-dir}/src/interop/external_video_track_source_interop.cpp
-        ${mr-webrtc-native-dir}/src/interop/global_factory.cpp
-        ${mr-webrtc-native-dir}/src/interop/interop_api.cpp
-        ${mr-webrtc-native-dir}/src/interop/local_video_track_interop.cpp
-        ${mr-webrtc-native-dir}/src/interop/peer_connection_interop.cpp
-        ${mr-webrtc-native-dir}/src/media/external_video_track_source.cpp
-        ${mr-webrtc-native-dir}/src/media/local_video_track.cpp
-        ${mr-webrtc-native-dir}/src/audio_frame_observer.cpp
-        ${mr-webrtc-native-dir}/src/data_channel.cpp
-        ${mr-webrtc-native-dir}/src/mrs_errors.cpp
-        ${mr-webrtc-native-dir}/src/pch.cpp
-        ${mr-webrtc-native-dir}/src/peer_connection.cpp
-        ${mr-webrtc-native-dir}/src/sdp_utils.cpp
-        ${mr-webrtc-native-dir}/src/str.cpp
-        ${mr-webrtc-native-dir}/src/tracked_object.cpp
-        ${mr-webrtc-native-dir}/src/video_frame_observer.cpp
+        ${mrwebrtc-dir}/src/interop/external_video_track_source_interop.cpp
+        ${mrwebrtc-dir}/src/interop/global_factory.cpp
+        ${mrwebrtc-dir}/src/interop/interop_api.cpp
+        ${mrwebrtc-dir}/src/interop/local_video_track_interop.cpp
+        ${mrwebrtc-dir}/src/interop/peer_connection_interop.cpp
+        ${mrwebrtc-dir}/src/media/external_video_track_source.cpp
+        ${mrwebrtc-dir}/src/media/local_video_track.cpp
+        ${mrwebrtc-dir}/src/audio_frame_observer.cpp
+        ${mrwebrtc-dir}/src/data_channel.cpp
+        ${mrwebrtc-dir}/src/mrs_errors.cpp
+        ${mrwebrtc-dir}/src/pch.cpp
+        ${mrwebrtc-dir}/src/peer_connection.cpp
+        ${mrwebrtc-dir}/src/sdp_utils.cpp
+        ${mrwebrtc-dir}/src/str.cpp
+        ${mrwebrtc-dir}/src/tracked_object.cpp
+        ${mrwebrtc-dir}/src/video_frame_observer.cpp
         ./jni_onload.cpp
 )
 
@@ -57,8 +57,8 @@ add_library(
 target_include_directories(
         mrwebrtc
         PRIVATE
-        ${mr-webrtc-native-dir}/include
-        ${mr-webrtc-native-dir}/src
+        ${mrwebrtc-dir}/include
+        ${mrwebrtc-dir}/src
         ${libwebrtc-src-dir}/webrtc/src/
         ${libwebrtc-src-dir}/webrtc/src/third_party/abseil-cpp
         ${libwebrtc-src-dir}/webrtc/src/third_party/libyuv/include
