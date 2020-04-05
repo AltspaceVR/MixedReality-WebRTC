@@ -1,2 +1,2 @@
-include ':webrtc-native', ':unityplugin-native'
-rootProject.name='MixedReality-WebRTC'
+include ':mrwebrtc', ':mrwebrtc-unityplugin'
+rootProject.name='Microsoft-MixedReality-WebRTC'
