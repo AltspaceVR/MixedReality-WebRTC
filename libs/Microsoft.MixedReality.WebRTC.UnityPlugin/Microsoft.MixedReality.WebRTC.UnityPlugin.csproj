@@ -25,7 +25,7 @@
     <Copyright>Copyright (c) Microsoft Corporation</Copyright>
     <PackageTags>webrtc video audio streaming</PackageTags>
     <DocumentationFile>..\..\bin\$(TargetFramework)\$(Configuration)\Microsoft.MixedReality.WebRTC.UnityPlugin.xml</DocumentationFile>
-    <AssemblyName>Microsoft-MixedReality-WebRTC-UnityPlugin</AssemblyName>
+    <AssemblyName>Microsoft.MixedReality.WebRTC.UnityPlugin</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
