@@ -101,7 +101,7 @@
   <PropertyGroup>
     <OutDir>..\..\..\..\bin\Win32\$(PlatformTarget)\$(Configuration)\</OutDir>
     <IntDir>..\..\..\..\build\Microsoft.MixedReality.WebRTC.UnityPlugin.Native\Win32\$(PlatformTarget)\$(Configuration)\</IntDir>
-    <TargetName>Microsoft-MixedReality-WebRTC-UnityPlugin-Native</TargetName>
+    <TargetName>mrwebrtc-unityplugin</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(PlatformTarget)' == 'x86'">
     <UnityPluginDirectory>$(ProjectDir)..\..\..\Microsoft.MixedReality.WebRTC.Unity\Assets\Plugins\Win32\x86</UnityPluginDirectory>
