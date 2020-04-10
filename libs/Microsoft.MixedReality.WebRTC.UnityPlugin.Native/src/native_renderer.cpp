@@ -97,7 +97,10 @@ std::vector<std::shared_ptr<NativeRenderer>> NativeRenderer::MultiGetUnsafe(
     const std::set<PeerConnectionHandle>& peerHandles) {
   std::vector<std::shared_ptr<NativeRenderer>> renderers;
   for (auto peerHandle : peerHandles) {
-    renderers.push_back(GetUnsafe(peerHandle));
+    auto renderer = GetUnsafe(peerHandle);
+    if (renderer) {
+      renderers.push_back(renderer);
+    }
   }
   return std::move(renderers);
 }
@@ -225,6 +228,9 @@ void MRS_CALL NativeRenderer::DoVideoUpdate() {
 
   /// RESEARCH: Can all native renderers be handled in a single draw call?
   for (auto renderer : renderers) {
+    if (!renderer)
+      continue;
+
     // TODO: Support ARGB format.
 
     std::vector<TextureDesc> textures;
