@@ -134,7 +134,7 @@ done
 # Replace C:/ for /mnt/c/ if using gradle in windows
 MRWEBRTC_AAR=${MRWEBRTC_AAR/C://mnt/c}
 MRWEBRTC_AAR=${MRWEBRTC_AAR//\\//}
-echo $MRWEBRTC_AAR
+echo -e "\e[39mAAR Path : \e[96m$MRWEBRTC_AAR\e[39m"
 
 # Ensure all arguments have reasonable values
 verify-arguments
