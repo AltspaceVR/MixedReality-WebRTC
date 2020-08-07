@@ -132,7 +132,9 @@ while getopts l:m:o:vh OPTION; do
 done
 
 # Replace C:/ for /mnt/c/ if using gradle in windows
-MRWEBRTC_AAR=${MRWEBRTC_AAR/C://mnt/c}
+DRIVE_CHAR=${MRWEBRTC_AAR:0:1}
+echo $DRIVE_CHAR
+MRWEBRTC_AAR=${MRWEBRTC_AAR/$DRIVE_CHAR://mnt/${DRIVE_CHAR,,}}
 MRWEBRTC_AAR=${MRWEBRTC_AAR//\\//}
 echo -e "\e[39mAAR Path : \e[96m$MRWEBRTC_AAR\e[39m"
 
