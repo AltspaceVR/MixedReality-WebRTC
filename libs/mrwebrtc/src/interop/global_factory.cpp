@@ -254,7 +254,7 @@ mrsResult GlobalFactory::InitializeImplNoLock() {
         wrapper::impl::org::webRtc::WebRtcFactoryConfiguration>();
     factoryConfig->thisWeak_ = factoryConfig;  // mimic wrapper_create()
     factoryConfig->audioCapturingEnabled = true;
-    factoryConfig->audioRenderingEnabled = true;
+    factoryConfig->audioRenderingEnabled = false; // BRWILS: do spatial audio.
     factoryConfig->enableAudioBufferEvents = false;
     factoryConfig->customAudioMixer =
         reinterpret_cast<std::uintptr_t>(custom_audio_mixer_.get());
