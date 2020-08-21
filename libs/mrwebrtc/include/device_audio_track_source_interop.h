@@ -12,6 +12,10 @@ extern "C" {
 struct mrsLocalAudioDeviceInitConfig {
   /// Enable auto gain control (AGC).
   mrsOptBool auto_gain_control_{mrsOptBool::kUnset};
+  mrsOptBool noise_suppression_{mrsOptBool::kUnset};
+  mrsOptBool highpass_filter_{mrsOptBool::kUnset};
+  mrsOptBool stereo_swapping_{mrsOptBool::kUnset};
+  mrsOptBool echo_cancellation_{mrsOptBool::kUnset};
 };
 
 /// Create an audio track source by opening a local audio capture device

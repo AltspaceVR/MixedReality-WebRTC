@@ -978,6 +978,8 @@ enum class FrameHeightRoundMode : int32_t { kNone = 0, kCrop = 1, kPad = 2 };
 /// See https://tools.ietf.org/html/rfc4566#page-43 for details.
 MRS_API mrsBool MRS_CALL mrsSdpIsValidToken(const char* token) noexcept;
 
+MRS_API void MRS_CALL mrsSetLogLevel(int level);
+
 /// See PeerConnection::SetFrameHeightRoundMode.
 MRS_API void MRS_CALL mrsSetFrameHeightRoundMode(FrameHeightRoundMode value);
 

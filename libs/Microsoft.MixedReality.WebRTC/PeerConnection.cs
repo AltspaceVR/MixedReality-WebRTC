@@ -1967,6 +1967,46 @@ namespace Microsoft.MixedReality.WebRTC
                 }
             }
         }
+        
+        /// <summary>
+        /// Logging Severity.
+        /// </summary>
+        public enum LoggingSeverity
+        {
+            /// <summary>
+            /// Sensitive.
+            /// </summary>
+            Sensitive,
+            /// <summary>
+            /// Verbose.
+            /// </summary>
+            Verbose,
+            /// <summary>
+            /// Info.
+            /// </summary>
+            Info,
+            /// <summary>
+            /// Warning.
+            /// </summary>
+            Warning,
+            /// <summary>
+            /// Error.
+            /// </summary>
+            Error,
+            /// <summary>
+            /// None.
+            /// </summary>
+            None
+        }
+
+        /// <summary>
+        /// Set the log level.
+        /// </summary>
+        /// <param name="severity"></param>
+        public static void SetLogLevel(LoggingSeverity severity)
+        {
+            Utils.SetLogLevel(severity);
+        }
 
         /// <summary>
         /// Frame height round mode.

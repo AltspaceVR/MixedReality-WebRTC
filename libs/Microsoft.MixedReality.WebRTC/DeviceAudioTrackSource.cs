@@ -16,6 +16,26 @@ namespace Microsoft.MixedReality.WebRTC
         /// Enable automated gain control (AGC) on the audio device capture pipeline.
         /// </summary>
         public bool? AutoGainControl = null;
+
+        /// <summary>
+        /// Audio processing to filter out background noise.
+        /// </summary>
+        public bool? NoiseSuppression = null;
+
+        /// <summary>
+        /// Audio processing to remove background noise of lower frequencies.
+        /// </summary>
+        public bool? HighpassFilter = null;
+
+        /// <summary>
+        /// Audio processing to swap the left and right channels.
+        /// </summary>
+        public bool? StereoSwapping = null;
+
+        /// <summary>
+        /// Enable echo cancellation (AEC). Audio processing that attempts to filter away the output signal from later inbound pickup. Also breaks recording entirely.
+        /// </summary>
+        public bool? EchoCancellation = null;
     }
 
     /// <summary>

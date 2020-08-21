@@ -21,7 +21,12 @@ ErrorOr<RefPtr<DeviceAudioTrackSource>> DeviceAudioTrackSource::Create(
 
   // Create the audio track source
   cricket::AudioOptions options{};
+
   options.auto_gain_control = ToOptional(init_config.auto_gain_control_);
+  options.noise_suppression = ToOptional(init_config.noise_suppression_);
+  options.highpass_filter = ToOptional(init_config.highpass_filter_);
+  options.stereo_swapping = ToOptional(init_config.stereo_swapping_);
+  options.echo_cancellation = ToOptional(init_config.echo_cancellation_);
   rtc::scoped_refptr<webrtc::AudioSourceInterface> audio_source =
       pc_factory->CreateAudioSource(options);
   if (!audio_source) {
