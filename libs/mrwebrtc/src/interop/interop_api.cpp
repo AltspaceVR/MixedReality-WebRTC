@@ -459,6 +459,11 @@ mrsBool MRS_CALL mrsSdpIsValidToken(const char* token) noexcept {
                                                        : mrsBool::kFalse);
 }
 
+void MRS_CALL mrsSetLogLevel(int level) {
+  rtc::LogMessage::LogToDebug((rtc::LoggingSeverity)level);
+  rtc::LogMessage::SetLogToStderr(level < rtc::LS_NONE);
+}
+
 void MRS_CALL mrsSetFrameHeightRoundMode(FrameHeightRoundMode value) {
   PeerConnection::SetFrameHeightRoundMode(
       (PeerConnection::FrameHeightRoundMode)value);

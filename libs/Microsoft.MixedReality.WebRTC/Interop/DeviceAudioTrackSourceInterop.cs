@@ -19,6 +19,10 @@ namespace Microsoft.MixedReality.WebRTC.Interop
         internal ref struct LocalAudioDeviceMarshalInitConfig
         {
             public mrsOptBool AutoGainControl;
+            public mrsOptBool NoiseSuppression;
+            public mrsOptBool HighpassFilter;
+            public mrsOptBool StereoSwapping;
+            public mrsOptBool EchoCancellation;
 
             /// <summary>
             /// Constructor for creating a local audio device initialization settings marshaling struct.
@@ -28,6 +32,10 @@ namespace Microsoft.MixedReality.WebRTC.Interop
             public LocalAudioDeviceMarshalInitConfig(LocalAudioDeviceInitConfig settings)
             {
                 AutoGainControl = (mrsOptBool)settings?.AutoGainControl;
+                NoiseSuppression = (mrsOptBool)settings?.NoiseSuppression;
+                HighpassFilter = (mrsOptBool)settings?.HighpassFilter;
+                StereoSwapping = (mrsOptBool)settings?.StereoSwapping;
+                EchoCancellation = (mrsOptBool)settings?.EchoCancellation;
             }
         }
 

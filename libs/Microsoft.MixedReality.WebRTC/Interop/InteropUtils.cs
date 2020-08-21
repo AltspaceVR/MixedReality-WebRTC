@@ -272,6 +272,10 @@ namespace Microsoft.MixedReality.WebRTC.Interop
             throw GetExceptionForErrorCode(res);
         }
 
+        [DllImport(Utils.dllPath, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Ansi,
+    EntryPoint = "mrsSetLogLevel")]
+        public static extern void SetLogLevel(PeerConnection.LoggingSeverity level);
+
         /// <summary>
         /// See <see cref="PeerConnection.SetFrameHeightRoundMode(PeerConnection.FrameHeightRoundMode)"/>.
         /// </summary>
