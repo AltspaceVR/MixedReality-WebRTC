@@ -27,6 +27,10 @@ ErrorOr<RefPtr<DeviceAudioTrackSource>> DeviceAudioTrackSource::Create(
   options.highpass_filter = ToOptional(init_config.highpass_filter_);
   options.stereo_swapping = ToOptional(init_config.stereo_swapping_);
   options.echo_cancellation = ToOptional(init_config.echo_cancellation_);
+  options.audio_loopback = ToOptional(init_config.loopback_);
+  options.audio_device_id = init_config.deviceId_ == nullptr
+    ? absl::nullopt
+    : absl::optional<std::string>(init_config.deviceId_);
   rtc::scoped_refptr<webrtc::AudioSourceInterface> audio_source =
       pc_factory->CreateAudioSource(options);
   if (!audio_source) {

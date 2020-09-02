@@ -36,6 +36,16 @@ namespace Microsoft.MixedReality.WebRTC
         /// Enable echo cancellation (AEC). Audio processing that attempts to filter away the output signal from later inbound pickup. Also breaks recording entirely.
         /// </summary>
         public bool? EchoCancellation = null;
+
+        /// <summary>
+        /// The name of the device to capture audio from. 
+        /// </summary>
+        public bool? Loopback = null;
+
+        /// <summary>
+        /// The name of the device to capture audio from. 
+        /// </summary>
+        public string DeviceId = null;
     }
 
     /// <summary>

@@ -23,6 +23,8 @@ namespace Microsoft.MixedReality.WebRTC.Interop
             public mrsOptBool HighpassFilter;
             public mrsOptBool StereoSwapping;
             public mrsOptBool EchoCancellation;
+            public mrsOptBool Loopback;
+            public string DeviceId;
 
             /// <summary>
             /// Constructor for creating a local audio device initialization settings marshaling struct.
@@ -36,6 +38,8 @@ namespace Microsoft.MixedReality.WebRTC.Interop
                 HighpassFilter = (mrsOptBool)settings?.HighpassFilter;
                 StereoSwapping = (mrsOptBool)settings?.StereoSwapping;
                 EchoCancellation = (mrsOptBool)settings?.EchoCancellation;
+                Loopback = (mrsOptBool)settings?.Loopback;
+                DeviceId = settings?.DeviceId;
             }
         }
 
