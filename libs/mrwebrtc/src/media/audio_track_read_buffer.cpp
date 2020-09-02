@@ -112,10 +112,21 @@ void AudioTrackReadBuffer::Buffer::addFrame(const Frame& frame,
     // match sample rate
     buffer_front.resize((src_count * dst_sample_rate / frame.sample_rate) + 1);
     short* data = buffer_front.data();
-    resampler_->ResetIfNeeded(frame.sample_rate, dst_sample_rate, curr_channels);
+    int res = resampler_->ResetIfNeeded(frame.sample_rate, dst_sample_rate, curr_channels);
+    if (res != 0) {
+      RTC_LOG(LS_ERROR) << "Cannot adjust for sample rate. Dropping frame.";
+      data_.clear();
+      used_ = 0;
+	  return;
+    }
     size_t count;
-    int res = resampler_->Push(curr_data, src_count, data, buffer_front.size(), count);
-    RTC_DCHECK(res == 0);
+    res = resampler_->Push(curr_data, src_count, data, buffer_front.size(), count);
+    if (res != 0) {
+      RTC_LOG(LS_ERROR) << "Failed to adjust for sample rate. Dropping frame.";
+      data_.clear();
+      used_ = 0;
+      return;
+    }
 
     curr_data = data;
     src_count = count;
