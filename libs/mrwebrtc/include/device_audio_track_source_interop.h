@@ -17,7 +17,7 @@ struct mrsLocalAudioDeviceInitConfig {
   mrsOptBool stereo_swapping_{mrsOptBool::kUnset};
   mrsOptBool echo_cancellation_{mrsOptBool::kUnset};
   mrsOptBool loopback_{mrsOptBool::kUnset};
-  const char* deviceId_;
+  const char* deviceId_{nullptr};
 };
 
 /// Create an audio track source by opening a local audio capture device

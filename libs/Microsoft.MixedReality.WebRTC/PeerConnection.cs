@@ -1504,6 +1504,14 @@ namespace Microsoft.MixedReality.WebRTC
         {
             MainEventSource.Log.CreateOffer();
             ThrowIfConnectionNotOpen();
+            if (LocalSdpReadytoSend == null)
+            {
+                throw new InvalidOperationException($"Cannot create an offer without a handler for the {nameof(LocalSdpReadytoSend)} event. This is required to send the SDP offer to the remote peer.");
+            }
+            if (IceCandidateReadytoSend == null)
+            {
+                throw new InvalidOperationException($"Cannot create an offer without a handler for the {nameof(IceCandidateReadytoSend)} event. This is required to send the ICE candidates to the remote peer.");
+            }
             return (PeerConnectionInterop.PeerConnection_CreateOffer(_nativePeerhandle) == Utils.MRS_SUCCESS);
         }
 

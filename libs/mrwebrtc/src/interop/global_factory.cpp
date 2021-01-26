@@ -253,8 +253,13 @@ mrsResult GlobalFactory::InitializeImplNoLock() {
     auto factoryConfig = std::make_shared<
         wrapper::impl::org::webRtc::WebRtcFactoryConfiguration>();
     factoryConfig->thisWeak_ = factoryConfig;  // mimic wrapper_create()
+    // Note: disabling any of those below will disable the entire capture/render
+    // stack, including any send/recv logic (stops pumping RTP packet queue) and
+    // audio frame callback. To silence automatic internal audio output to
+    // system speakers (but otherwise continue to receive RTP audio packets and
+    // process them), use the toggle mixer instead (toggle_audio_mixer.cpp).
     factoryConfig->audioCapturingEnabled = true;
-    factoryConfig->audioRenderingEnabled = false; // BRWILS: do spatial audio.
+    factoryConfig->audioRenderingEnabled = true;
     factoryConfig->enableAudioBufferEvents = false;
     factoryConfig->customAudioMixer =
         reinterpret_cast<std::uintptr_t>(custom_audio_mixer_.get());
@@ -373,7 +378,7 @@ bool GlobalFactory::ShutdownImplNoLock(ShutdownAction shutdown_action) {
   peer_factory_ = nullptr;
 #if defined(WINUWP)
   impl_ = nullptr;
-#else   // defined(WINUWP)
+#else  // defined(WINUWP)
   network_thread_.reset();
   worker_thread_.reset();
   signaling_thread_.reset();
