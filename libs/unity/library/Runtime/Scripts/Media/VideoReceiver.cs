@@ -86,7 +86,7 @@ namespace Microsoft.MixedReality.WebRTC.Unity
             Debug.Assert(track is RemoteVideoTrack);
             Debug.Assert(VideoTrack == track);
             VideoTrack = null;
-            VideoStreamStopped.Invoke(VideoTrack);
+            VideoStreamStopped.Invoke(track as RemoteVideoTrack);
         }
     }
 }
