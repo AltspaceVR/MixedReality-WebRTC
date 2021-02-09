@@ -229,7 +229,7 @@ if ($BuildUWP)
         "$MRWebRTCDir\tools\build\mrwebrtc\uwp" `
         "mrwebrtc-uwp.vcxproj" `
         "$MRWebRTCDir\bin\UWP" `
-        "UWP" `
+        "WSA" `
         ("mrwebrtc.dll", "mrwebrtc.pdb") `
         ("x64", "ARM") `
         $flavor `
@@ -239,7 +239,7 @@ if ($BuildUWP)
         "$MRWebRTCDir\tools\build\mrwebrtc-unityplugin\uwp" `
         "mrwebrtc-unityplugin-uwp.vcxproj" `
         "$MRWebRTCDir\bin\UWP" `
-        "UWP" `
+        "WSA" `
         ("mrwebrtc-unityplugin.dll", "mrwebrtc-unityplugin.pdb") `
         ("x64", "ARM")  `
         $flavor `
