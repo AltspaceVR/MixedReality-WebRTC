@@ -1904,6 +1904,10 @@ namespace Microsoft.MixedReality.WebRTC
             /// headers and paddings.
             /// </summary>
             public ulong BytesReceived;
+
+            public string TlsVersion;
+            public string DtlsCipher;
+            public string SrtpCipher;
         }
 
         /// <summary>

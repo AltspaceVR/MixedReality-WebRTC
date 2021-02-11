@@ -736,9 +736,16 @@ mrsStatsReportGetObjects(mrsStatsReportHandle report_handle,
     for (auto&& stats : *report) {
       if (!strcmp(stats.type(), "transport")) {
         const auto& dc_stats = stats.cast_to<webrtc::RTCTransportStats>();
-        mrsTransportStats simple_stats{dc_stats.timestamp_us(),
-                                       *dc_stats.bytes_sent,
-                                       *dc_stats.bytes_received};
+        mrsTransportStats simple_stats{
+            dc_stats.timestamp_us(),
+            *dc_stats.bytes_sent,
+            *dc_stats.bytes_received,
+            dc_stats.tls_version.is_defined() ? dc_stats.tls_version->c_str()
+                                              : "",
+            dc_stats.dtls_cipher.is_defined() ? dc_stats.dtls_cipher->c_str()
+                                              : "",
+            dc_stats.srtp_cipher.is_defined() ? dc_stats.srtp_cipher->c_str()
+                                              : ""};
         (*callback)(user_data, &simple_stats);
       }
     }
