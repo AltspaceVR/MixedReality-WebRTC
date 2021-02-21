@@ -740,7 +740,8 @@ mrsStatsReportGetObjects(mrsStatsReportHandle report_handle,
         mrsTransportStats simple_stats{
             dc_stats.timestamp_us(),
             *dc_stats.bytes_sent,
-            *dc_stats.bytes_received};
+            *dc_stats.bytes_received, 
+            "", "", ""};
         (*callback)(user_data, &simple_stats);
       }
 #else
