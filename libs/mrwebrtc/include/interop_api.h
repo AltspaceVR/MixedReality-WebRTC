@@ -1084,6 +1084,9 @@ struct mrsTransportStats {
   int64_t timestamp_us;
   uint64_t bytes_sent;
   uint64_t bytes_received;
+  const char* tls_version;
+  const char* dtls_cipher;
+  const char* srtp_cipher;
 };
 
 /// Handle to a WebRTC stats report.

@@ -222,7 +222,7 @@ namespace Microsoft.MixedReality.WebRTC.Interop
             }
             else if (list is List<PeerConnection.TransportStats> transportStatsList)
             {
-                transportStatsList.Add(*(PeerConnection.TransportStats*)statsObject);
+                transportStatsList.Add(Marshal.PtrToStructure<PeerConnection.TransportStats>(statsObject));
             }
         }
 

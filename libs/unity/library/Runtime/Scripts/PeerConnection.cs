@@ -664,6 +664,7 @@ namespace Microsoft.MixedReality.WebRTC.Unity
             {
                 // Preventing access to audio crashes the ADM1 at startup and the entire application.
                 bool permissionGranted = await UwpUtils.RequestAccessAsync(StreamingCaptureMode.Audio);
+                token.ThrowIfCancellationRequested();
                 if (!permissionGranted)
                 {
                     return null;
