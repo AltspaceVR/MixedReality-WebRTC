@@ -736,6 +736,14 @@ mrsStatsReportGetObjects(mrsStatsReportHandle report_handle,
     for (auto&& stats : *report) {
       if (!strcmp(stats.type(), "transport")) {
         const auto& dc_stats = stats.cast_to<webrtc::RTCTransportStats>();
+#if WEBRTC_ANDROID
+        mrsTransportStats simple_stats{
+            dc_stats.timestamp_us(),
+            *dc_stats.bytes_sent,
+            *dc_stats.bytes_received};
+        (*callback)(user_data, &simple_stats);
+      }
+#else
         mrsTransportStats simple_stats{
             dc_stats.timestamp_us(),
             *dc_stats.bytes_sent,
@@ -748,6 +756,7 @@ mrsStatsReportGetObjects(mrsStatsReportHandle report_handle,
                                               : ""};
         (*callback)(user_data, &simple_stats);
       }
+#endif
     }
   }
   return Result::kSuccess;
