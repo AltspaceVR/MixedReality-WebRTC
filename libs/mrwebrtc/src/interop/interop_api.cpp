@@ -644,6 +644,8 @@ mrsStatsReportGetObjects(mrsStatsReportHandle report_handle,
         if (*irtp_stats.kind == "audio") {
           auto& dest_stats = FindOrInsert(pending_stats, *irtp_stats.track_id);
           GetCommonValues(dest_stats, irtp_stats);
+          dest_stats.jitter = *irtp_stats.jitter;
+          dest_stats.packets_lost = *irtp_stats.packets_lost;
         }
       } else if (!strcmp(stats.type(), "track")) {
         const auto& track_stats =
@@ -712,6 +714,7 @@ mrsStatsReportGetObjects(mrsStatsReportHandle report_handle,
           auto& dest_stats = FindOrInsert(pending_stats, *irtp_stats.track_id);
           GetCommonValues(dest_stats, irtp_stats);
           dest_stats.frames_decoded = *irtp_stats.frames_decoded;
+          dest_stats.packets_lost = *irtp_stats.packets_lost;
         }
       } else if (!strcmp(stats.type(), "track")) {
         const auto& track_stats =

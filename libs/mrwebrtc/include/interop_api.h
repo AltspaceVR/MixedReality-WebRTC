@@ -1046,6 +1046,9 @@ struct mrsAudioReceiverStats {
   int64_t rtp_stats_timestamp_us;
   uint32_t packets_received;
   uint64_t bytes_received;
+  int32_t packets_lost;
+  double jitter;
+  double round_trip_time;
 };
 
 /// Subset of RTCMediaStreamTrack (video sender) and RTCOutboundRTPStreamStats.
@@ -1067,15 +1070,32 @@ struct mrsVideoSenderStats {
 /// See https://www.w3.org/TR/webrtc-stats/#rvststats-dict* and
 /// https://www.w3.org/TR/webrtc-stats/#inboundrtpstats-dict*
 struct mrsVideoReceiverStats {
-  int64_t track_stats_timestamp_us;
-  const char* track_identifier;
-  uint32_t frames_received;
-  uint32_t frames_dropped;
+  int64_t       track_stats_timestamp_us;
+  const char*   track_identifier;
+  uint32_t      frames_received;
+  uint32_t      frames_dropped;
+  uint32_t      frames_decoded;
 
-  int64_t rtp_stats_timestamp_us;
-  uint32_t packets_received;
-  uint64_t bytes_received;
-  uint32_t frames_decoded;
+  int64_t       rtp_stats_timestamp_us;
+  uint32_t      packets_received;
+  uint64_t      bytes_received;
+  int32_t       packets_lost;
+
+  double        jitter;
+  double        fraction_lost;
+  double        round_trip_time;
+  uint32_t      packets_discarded;
+  uint32_t      packets_repaired;
+  
+  uint32_t      burst_packets_lost;
+  uint32_t      burst_packets_discarded;
+  uint32_t      burst_loss_count;
+  uint32_t      burst_discard_count;
+  double        burst_loss_rate;
+  double        burst_discard_rate;
+  double        gap_loss_rate;
+  double        gap_discard_rate;
+  
 };
 
 /// Subset of RTCTransportStats. See
